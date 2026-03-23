@@ -28,8 +28,8 @@ class MapPage extends StatelessWidget {
             markers: const [
               Marker(
                 point: _markerPosition,
-                width: 90,
-                height: 110,
+                width: 120,
+                height: 140,
                 child: CustomMarkerWidget(
                   imageUrl: _imageUrl,
                   battery: _battery,
