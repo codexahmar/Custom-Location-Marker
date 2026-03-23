@@ -41,14 +41,12 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
 
   @override
   Widget build(BuildContext context) {
-    // Elegant, Uber-like minimalist design
     return SizedBox(
       width: 120,
       height: 140,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // 1. Animated pulsing ripple (Radar effect)
           Positioned(
             bottom: 15,
             child: AnimatedBuilder(
@@ -58,7 +56,9 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
                   width: 50 + (_pulseAnimation.value * 50),
                   height: 20 + (_pulseAnimation.value * 20),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.elliptical(100, 40)),
+                    borderRadius: const BorderRadius.all(
+                      Radius.elliptical(100, 40),
+                    ),
                     color: Colors.black.withOpacity(
                       0.3 * (1 - _pulseAnimation.value),
                     ),
@@ -67,18 +67,16 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
               },
             ),
           ),
-
-          // Base shadow for the pin
           Positioned(
             bottom: 25,
             child: Container(
               width: 12,
               height: 6,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(12, 6)),
+                borderRadius: const BorderRadius.all(Radius.elliptical(12, 6)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withOpacity(0.5),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -86,35 +84,37 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
               ),
             ),
           ),
-
-          // 2. The sleek Marker Pin (Custom teardrop-like layout)
           Positioned(
             bottom: 30,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Elegant User Badge
                 Container(
-                  width: 65,
-                  height: 65,
+                  width: 68,
+                  height: 68,
                   decoration: BoxDecoration(
-                    color: Colors.black, // Sleek black base (Uber style)
                     shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF333333), Color(0xFF000000)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
-                        blurRadius: 15,
-                        offset: const Offset(0, 8),
-                      ), // Soft elevation
+                        color: Colors.black.withOpacity(0.35),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
                     ],
                   ),
                   child: Center(
                     child: Container(
-                      width: 58,
-                      height: 58,
-                      decoration: const BoxDecoration(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
+                        border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: ClipOval(
                         child: Image.network(
@@ -125,18 +125,15 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
                     ),
                   ),
                 ),
-                // Pin point
                 CustomPaint(
-                  size: const Size(16, 12),
+                  size: const Size(18, 14),
                   painter: _TrianglePainter(color: Colors.black),
                 ),
               ],
             ),
           ),
-
-          // 3. Floating Modern Status Indicator (Battery)
           Positioned(
-            top: 6,
+            top: 4,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
@@ -144,7 +141,7 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.15),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -153,38 +150,53 @@ class _CustomMarkerWidgetState extends State<CustomMarkerWidget>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Stack(
-                    alignment: Alignment.centerLeft,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        width: 18,
-                        height: 8,
+                        width: 20,
+                        height: 9,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: Colors.grey.shade400,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.all(0.5),
+                            width: 18 * (widget.battery / 100).clamp(0.0, 1.0),
+                            decoration: BoxDecoration(
+                              color: widget.battery > 20
+                                  ? const Color(0xFF18181A)
+                                  : Colors.redAccent,
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
-                        width: 18 * (widget.battery / 100).clamp(0.0, 1.0),
-                        height: 8,
+                        width: 2,
+                        height: 4,
                         decoration: BoxDecoration(
-                          color: widget.battery > 20
-                              ? Colors
-                                    .black // Sleek minimal black
-                              : Colors.redAccent,
-                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.grey.shade400,
+                          borderRadius: const BorderRadius.horizontal(
+                            right: Radius.circular(2),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   Text(
                     '${widget.battery}%',
                     style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                      letterSpacing: 0.3,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF222222),
+                      letterSpacing: 0.2,
                     ),
                   ),
                 ],
